@@ -1,8 +1,8 @@
 import React from "react"
 
+import Home from "./components/Home"
 import TableSingleplayer from "./components/TableSingleplayer"
 import TableMultiplayer from "./components/TableMultiplayer"
-import Home from "./components/Home.js"
 
 import { initializeApp } from "firebase/app";
 import * as fbauth  from "firebase/auth";
@@ -32,15 +32,14 @@ export default function App() {
   const onDisconnectRef = React.useRef();
   const onGameAddedRef = React.useRef();
 
- const countToWin = React.useRef();
+  const countToWin = React.useRef();
 
- const playerRef = React.useRef();
+  const playerRef = React.useRef();
 
   const mmRef = database.ref(db, '/matchmaking');
   const gamesRef = database.ref(db, '/games');
 
   React.useEffect(() => {
-
     fbauth.onAuthStateChanged(auth, (user) => {
       if(user){
         playerRef.current = auth.currentUser;
