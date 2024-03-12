@@ -1,0 +1,628 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;800;900&family=Varela+Round&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Poppins, 'sans-serif';
+    font-weight: 600;
+}
+
+:root {
+    --zoom: 100px;
+    --xo-size: 90;
+    --plus-size: 25;
+    --plus-opacity: 0.5;
+    --board-size: 3;
+    --background-color: #0c0b1c;
+    --table-color: #ede5da;
+    /* --table-color: #eeeeee; */
+    --square-color: #ffffff;
+}
+
+body{
+  background-color: var(--background-color);
+  color: white;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+.square{
+    position: relative;
+    height: var(--zoom);
+    width: var(--zoom);
+    margin: 0;
+    padding: 0;
+    
+}
+.squareShadow{
+    position: relative;
+    height: var(--zoom);
+    width: var(--zoom);
+    margin: 0;
+    padding: 0;
+    /* box-shadow: 0px 0px 40px 5px var(--background-color); */
+    /* opacity: 0.13; */
+    
+}
+
+/* .square > h1{
+    height: 100%;
+    width: 100%;
+    --xo-size-eq: calc(var(--xo-size)/100 * var(--zoom));
+    font-family: Varela Round, sans-serif;
+    font-size: var(--xo-size-eq);
+    text-align: center;
+    vertical-align: middle;
+    line-height: var(--zoom);
+    color: var(--background-color);
+    position: absolute;
+    z-index: 1;
+} */
+
+.square > .X {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.square > .X > svg{
+    height: 70%;
+    width: 70%;
+    animation: pop-inX 0.1s ease;
+}
+
+.square > .X > svg > path{
+    fill: var(--background-color);
+}
+
+@keyframes pop-inX{
+    0%{
+        height: 70%;
+        width: 70%;
+    }
+
+    10%{
+        height: 80%;
+        width: 80%;
+    }
+    /* 75%{
+        height: 65%;
+        width: 65%;
+    } */
+    100%{
+        height: 70%;
+        width: 70%;
+    }
+}
+
+.square > .plus {
+    --plus-size-eq: calc(var(--plus-size) * 0.01 * var(--zoom));
+    height: var(--plus-size-eq);
+    width: var(--plus-size-eq);
+    position: absolute;
+    pointer-events: none;
+}
+
+.square > .plus > svg{
+    height: 100%;
+    width: 100%;
+    opacity: var(--plus-opacity);
+}
+
+.square > .plusCorner > svg{
+    height: 125%;
+    width: 125%;
+    opacity: calc(var(--plus-opacity) + 0.2);
+}
+
+.square > .plus > svg > path{
+    fill: var(--background-color);
+}
+
+.square > .plusCorner {
+    display: none;
+} 
+
+.game--container > .table > .line:first-child > .cell:first-child > .square > .plusCorner {
+    display:inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-left: -6%;
+    margin-top: -6%;
+}
+
+.game--container > .table > .line:first-child > .cell:last-child > .square > .plusCorner {
+    display:inline-block;
+    transform: scaleX(-1);
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: -6%;
+    margin-right: -6%;
+}
+
+.game--container > .table > .line:nth-last-child(2) > .cell:first-child > .square > .plusCorner {
+    display:inline-block;
+    transform: scaleY(-1);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin-bottom: -6%;
+    margin-left: -6%;
+} 
+
+.game--container > .table > .line:nth-last-child(2) > .cell:last-child > .square > .plusCorner {
+    display:inline-block;
+    transform: scale(-1, -1);
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-bottom: -6%;
+    margin-right: -6%;
+}
+
+.square > .plusMiddle {
+
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    z-index: 2;
+}
+
+.square > .plusMiddle > svg {
+    /* placing the + at the corner in-between */
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-bottom: -50%;
+    margin-right: -50%; 
+}
+.game--container > .table > .line:nth-last-child(1), .line:nth-last-child(2) > .cell > .square > .plusMiddle > svg {
+    display: none;
+}
+
+.game--container > .table > .line > .cell:nth-last-child(1) > .square > .plusMiddle > svg {
+    display: none;
+}
+
+.square > .plusSides {
+    display: none;
+}
+
+.game--container > .table > .line:nth-child(1) > .cell > .square > .plusSides {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+
+
+.game--container > .table > .line:nth-child(1) > .cell > .square > .plusSides > svg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: -10%;
+    margin-right: -50%;
+}
+
+.game--container > .table > .line > .cell:nth-last-child(1) > .square > .plusSides {
+    display: inline-block;
+    transform-origin: 50% 0;
+    top:unset;
+    right:unset;
+    bottom: 0;
+    right: 0;
+    transform: rotate(90deg);
+}
+
+.game--container > .table > .line > .cell:nth-last-child(1) > .square > .plusSides > svg {
+    position: absolute;
+    top:unset;
+    right:unset;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 65%;
+    margin-right: -100%;
+}
+
+.game--container > .table > .line:nth-last-child(2) > .cell > .square > .plusSides {
+    display: inline-block;
+    transform-origin: 50% 0;
+    top:unset;
+    right:unset;
+    bottom: unset;
+    bottom: 0;
+    right: 0;
+    transform: rotate(180deg);
+}
+
+.game--container > .table > .line:nth-last-child(2) > .cell > .square > .plusSides > svg {
+    position: absolute;
+    top:unset;
+    right:unset;
+    bottom: unset;
+    bottom: 0;
+    left: 0;
+    margin-bottom: 110%;
+    margin-left: 225%;
+}
+
+.game--container > .table > .line:nth-child(n+2) > .cell:nth-child(1) > .square > .plusSides {
+    display: inline-block;
+    transform-origin: 50% 0;
+    top:unset;
+    right:unset;
+    bottom: unset;
+    left: 0;
+    bottom: 0;
+    transform: rotate(270deg);
+}
+/* .game--container > .table > .line:nth-last-child(2) > .cell:nth-child(1) > .square > .plusSides {
+    display: none;
+} */
+
+.game--container > .table > .line:nth-child(n+2) > .cell:nth-child(1) > .square > .plusSides > svg {
+    position: absolute;
+    top:unset;
+    right:unset;
+    bottom: unset;
+    left: unset;
+    right: 0;
+    top: 0;
+    margin-right: -170%;
+    margin-top: -60%;
+}
+
+.square > .lastPicked {
+    pointer-events: none;
+}
+
+.line {
+    width: calc(var(--board-size)*var(--zoom));
+    display: grid;
+    gap: 0;
+    grid-template-columns: repeat(var(--board-size), var(--zoom));
+    grid-column-gap: 0;
+    grid-row-gap: 0;
+}
+
+.game--container{
+    margin: auto;
+    width: calc(var(--board-size)*var(--zoom));
+    height: 100vh;
+    min-height: calc(var(--board-size)*var(--zoom) + 60px);
+    min-width: calc(var(--board-size)*var(--zoom) + 41.5px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.table{
+    /* overflow:hidden; */
+    position: relative;
+    width: calc(var(--board-size)*var(--zoom) + 30px);
+    padding: 15px;
+    box-shadow: 
+    inset 0px 0px 13px 2px var(--background-color),
+    0 0 100px 20px rgb(0, 0, 0);
+    border-radius: 5px;
+    background-color: var(--table-color);
+    display: grid;
+    gap: 0;
+    grid-template-rows: repeat(var(--board-size),  var(--zoom));
+
+;
+}
+
+.onHoverHitbox{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.hitbox{
+    position: absolute;
+    height: 80%;
+    width: 80%;
+    top: 50%;
+    left: 50%;
+    border-radius: 20px;
+    transform: translate(-50%, -50%);
+} 
+
+/* .outside {
+    position: absolute;
+    width: calc(var(--board-size)*var(--zoom) + 42.5px);
+    height: calc(var(--board-size)*var(--zoom) + 42.5px);
+    top: -21.25px;
+    left: -21.25px;
+    background-color: var(--table-color);
+    z-index: -2;
+    box-shadow: 
+                inset 0 0 4px 10px var(--background-color);
+} */
+
+
+.table .line:last-child .img > svg{
+    
+     display: none;
+        
+}
+
+.table .cell:last-child .img > svg{
+    
+     display: none;
+        
+}
+
+.scoreboard--container{
+    width: calc(var(--board-size)*var(--zoom));
+    color: var(--table-color);
+    text-align: center;
+    letter-spacing: 2px;
+    padding-bottom: 15px;
+    z-index: 1;
+}
+
+.menuContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3em;
+    transition: all 0.3s;
+}
+
+.buttonsContainer{
+    /* height: 100%; */
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* flex-wrap: wrap; */
+    gap: 10em;
+    transition: all 0.3s;
+    animation: prevent-hover 0.3s forwards;
+}
+
+.button{
+    border: none;
+    height: 9em;
+    width: 14em;
+    border-radius: 5%;
+    background-color: rgb(221, 117, 20);
+    transition: all 0.3s;
+    animation: pop-in 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.button > p {
+    font-family: Poppins;
+    font-weight: 800;
+    font-size: 2.3em;
+    pointer-events: none;
+}
+
+.buttonImg{
+    pointer-events: none;
+}
+
+.button > img{
+    height: 60%;
+    /* align-self: center; */
+    opacity: 90%;
+    pointer-events: none;
+}
+
+.button:active{
+    transform: scale(0.8);
+}
+ 
+.returnButton{
+    background-color: rgb(238, 144, 81);
+    border: none;
+    height: 4em;
+    width: 4.5em;
+    border-radius: 15%;
+    transition: all 0.3s;
+    animation: pop-in 0.3s;
+}
+
+.returnButton > img {
+    padding-top: 6px;
+    height: 60%;
+    align-self: center;
+    opacity: 90%;
+    pointer-events: none;
+}
+
+.returnButton:hover{
+    transform: scale(1.2);
+    background-color: rgb(240, 178, 137);
+    box-shadow: 0 0 30px -9px rgb(240, 178, 137);
+}
+
+@keyframes pop-in{
+    0%{
+        transform: scale(0.5);
+        pointer-events: none;
+    }
+
+    30%{
+        transform: scale(1.1);
+        pointer-events: none;
+    }
+    /* 75%{
+        height: 65%;
+        width: 65%;
+    } */
+    100%{
+        transform: scale(1);
+        pointer-events: none;
+    }
+}
+
+@keyframes prevent-hover{
+    0%{
+        pointer-events: none;
+    }
+     99%{
+        pointer-events: none;
+    }
+    100%{
+        pointer-events: all;
+    }
+}
+
+.pulse{
+    animation: pulse ease-in-out 1.3s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes pulse{
+    0%{
+        transform: scale(0.9);
+        pointer-events: none;
+    }
+
+    50%{
+        transform: scale(1.1);
+        pointer-events: none;
+    }
+    100%{
+        transform: scale(0.9);
+        pointer-events: none;
+    }
+}
+
+.preventHoverOnRender{
+    animation: prevent-hover 0.3s forwards;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 2em;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.buttonInfo{
+    min-width: 7em;
+    max-width: auto;
+    /* word-wrap: normal; */
+    text-align: center;
+    font-size: 2em;
+}
+
+.buttonSubInfo{
+    font-size: 1.4em;
+    color: rgb(255, 179, 0);
+}
+
+.buttonInfoContainer{
+    background-color: black;
+    border-radius: 5%;
+    height: 10em;
+    width: auto;
+    /* min-width: 17em; */
+    /* max-width: 20em; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2em;
+    position: absolute;
+    top: -170%;
+    transform: scale(0);
+    opacity: 0;
+    transform-origin: bottom center;
+    pointer-events: none;
+    transition: all 0.3s;
+    animation: pop-in 0.3s;
+}
+
+.buttonContainer:hover .buttonInfoContainer {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* .buttonContainer:hover {
+    transform: scale(1.2);
+} */
+
+.buttonContainer:hover .button {
+    background-color: rgb(221, 100, 20);
+    box-shadow: 0 0 30px -9px rgb(221, 100, 20);
+}
+
+.resetButton{
+    width: 2em;
+    height: 2.3em;
+    background-color: rgb(255, 229, 159);
+}
+
+.heroImg{
+    /* width: 100%; */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3em;
+    position: relative;
+}
+
+.homeContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    height: 100vh;
+    width: 100vw;
+    min-height: 500px;
+    min-width: 1000px;
+    gap: 5em;
+}
+
+.heroImg svg path {
+    fill: white;
+}
+
+body::-webkit-scrollbar
+{
+  width: 6px;
+  background-color: #F5F5F5;
+}
+
+body::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #000000;
+}
+
+body::-webkit-scrollbar-thumb
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #430035;
+}
