@@ -11,8 +11,8 @@ export default function TableMultiplayer(props){
     const tableStateRef = React.useRef(tableState);
     const tableClickHandlers = React.useRef();
     if(!tableClickHandlers.current) { tableClickHandlers.current = tableClickHandlersSetup(); }
-    const isX = React.useRef(props.isX === 'X' ? true : false);
-    const yourTurn = React.useRef(isX.current ? true : false);
+    const playerValue = React.useRef(props.playerValue);
+    const yourTurn = React.useRef(playerValue.current ? true : false);
     const lastPicked = React.useRef( { line: undefined, cell: undefined } );
     const tableFull = React.useRef(0);
 
@@ -196,7 +196,7 @@ export default function TableMultiplayer(props){
             else if(Math.sqrt(tableFull.current) === props.tableSize) { database.set(child(gameRef, '/status'), 'game over'); return }
             else { return }
     
-            database.set(child(gameRef, '/info/winner'), isX.current ? 'X' : 'O');
+            database.set(child(gameRef, '/info/winner'), playerValue.current ? 'X' : 'O');
     
             database.set(child(gameRef, '/status'), 'game over');
         }
@@ -209,7 +209,7 @@ export default function TableMultiplayer(props){
         
         _tableState[line][cell] = {
             ..._tableState[line][cell],
-            value: isX.current ? "X" : "O",
+            value: playerValue.current ? "X" : "O",
             isChecked: true,
         };
 

@@ -4,17 +4,21 @@ import * as database  from "firebase/database";
 import {child} from "firebase/database";
 import Square from "./Square"
 import Countdown from "./Countdown"
+import ResetButton from "./ResetButton.js";
 
 export default function TableSingleplayer(props){
     
     const [tableState, setTableState] = React.useState(tableSetup());
-    const tableStateRef = React.useRef(tableState);
+    const tableStateRef = React.useRef();
     const tableClickHandlers = React.useRef();
     if(!tableClickHandlers.current) { tableClickHandlers.current = tableClickHandlersSetup(); }
-    const isX = React.useRef(props.isX === 'X' ? false : true);
-    const yourTurn = React.useRef(isX.current ? true : false);
+    const playerValue = React.useRef('X');
+    const yourTurn = React.useRef(playerValue.current ? true : false);
     const lastPicked = React.useRef( { line: undefined, cell: undefined } );
     const tableFull = React.useRef(0);
+    const myscore = React.useRef(0);
+    const enemyscore = React.useRef(0);
+    const round = React.useRef(1);
 
     const [preTimerOn, setPreTimerOn] = React.useState(true);
     const [timerOn, setTimerOn] = React.useState(false);
@@ -29,6 +33,21 @@ export default function TableSingleplayer(props){
 
     const gameStarted = React.useRef(false);
     const winner = React.useRef(undefined);
+
+    function reset(){
+        playerValue.current = 'X';
+        yourTurn.current = true;
+        lastPicked.current = { line: undefined, cell: undefined };
+        tableFull.current = 0;
+        setTimerOn(false);
+        setTableState(tableSetup());
+        setTimer({
+            minutes: "", 
+            seconds: ""
+        });
+        gameStarted.current = false;
+        winner.current = undefined;
+    }
 
     var cell = 
         {
@@ -144,7 +163,13 @@ export default function TableSingleplayer(props){
             else if(checkHorizontal() >= props.countToWin) {}
             else if(tableFull.current === (props.tableSize * props.tableSize)) { endGame(); return }
             else { return }
-            winner.current = isX.current ? 'X' : 'O';
+            console.log(round.current, round.current%2.0 != 0)
+            if(playerValue.current === 'X'){
+                myscore.current = myscore.current + 1;
+            } else {
+                enemyscore.current = enemyscore.current + 1;
+            }
+            winner.current = playerValue.current;
             endGame();
         }
 
@@ -157,7 +182,7 @@ export default function TableSingleplayer(props){
         
         _tableState[line][cell] = {
             ..._tableState[line][cell],
-            value: isX.current ? "X" : "O",
+            value: playerValue.current,
             isChecked: true,
             lastPicked: true,
         };
@@ -174,12 +199,12 @@ export default function TableSingleplayer(props){
         tableStateRef.current = _tableState;
         setTableState(_tableState);
         checkWin(line, cell);
-        isX.current = !isX.current;
+        playerValue.current = playerValue.current === 'X' ? 'O' : 'X';
 
     }
 
     function endGame(){
-        
+        round.current = round.current + 1;
         let _tableState = JSON.parse(JSON.stringify(tableStateRef.current));
         for(let i = 0; i < props.tableSize; i++){
             for(let j = 0; j < props.tableSize; j++){
@@ -235,13 +260,17 @@ export default function TableSingleplayer(props){
     }, [timer]);
 
     return(
+        
         <div className="game--container">
-            {(!timerOn && !gameStarted.current) && <Countdown getTime={getTime} minutes={0} seconds={10} running={preTimerOn} hide={false}/>}
-            {(timerOn || (!timerOn && gameStarted.current)) && <Countdown getTime={getTime} minutes={10} seconds={0} running={timerOn} hide={false}/>}
+                <p>{myscore.current}</p>
+                <p>{enemyscore.current}</p>
+                {(!timerOn && !gameStarted.current) && <Countdown getTime={getTime} minutes={0} seconds={10} running={preTimerOn} hide={false}/>}
+                {(timerOn || (!timerOn && gameStarted.current)) && <Countdown getTime={getTime} minutes={10} seconds={0} running={timerOn} hide={false}/>}
             <div className="table">
                 {table}
             <div className="outside" />
             </div>
+            <ResetButton onClick={reset}/>
         </div>
     )
 }

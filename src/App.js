@@ -25,7 +25,7 @@ const firebaseConfig = {
 export default function App() {
   const [loaded, setLoaded] = React.useState(false);
   const tableSize = React.useRef(0);
-  const isX = React.useRef('X');
+  const playerValue = React.useRef('X');
   const gameId = React.useRef();
   const [gaming, setGaming] = React.useState(false);
 
@@ -71,7 +71,7 @@ export default function App() {
                 onDisconnectRef.current = database.onDisconnect(database.child(mmRef, `/${size}/${playerRef.current.uid}`)).remove();
                 onGameAddedRef.current = database.onChildAdded(database.child(gamesRef, `/${size}`), (game) => {
                   if(game.key.includes(playerRef.current.uid)){
-                    isX.current = game.child(`players/${playerRef.current.uid}`).val();
+                    playerValue.current = game.child(`players/${playerRef.current.uid}`).val();
                     tableSize.current = parseInt(game.ref.parent.key);
                     countToWin.current = count;
                     gameId.current = game.key;
@@ -111,7 +111,7 @@ export default function App() {
   function singleplayer( { size, count } ){
     tableSize.current = size;
     countToWin.current = count;
-    isX.current = true;
+    playerValue.current = 'X';
     setGaming(true);
   }
 
@@ -121,7 +121,7 @@ export default function App() {
     return(
     <>
         { !gaming && loaded && <Home singleplayer={singleplayer} matchmake={matchmake}/> }
-        { gaming && gameId.current &&  <TableMultiplayer tableSize={tableSize.current} countToWin={countToWin.current} id = {gameId.current} key={gameId.current} isX = {isX.current}/> }
+        { gaming && gameId.current &&  <TableMultiplayer tableSize={tableSize.current} countToWin={countToWin.current} id = {gameId.current} key={gameId.current} playerValue = {playerValue.current}/> }
         { gaming && !gameId.current && <TableSingleplayer tableSize={tableSize.current} countToWin={countToWin.current}/> }
     </>
     )
