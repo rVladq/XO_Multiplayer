@@ -42,7 +42,6 @@ let lastPickedStyle = {
 }
 
 const Square = React.memo((props) => {
-console.log('rendered!');
     // const [hover, setHover] = React.useState(false);
     const [last, setLast] = React.useState(false);
     

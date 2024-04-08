@@ -20,8 +20,11 @@ export default function TableSingleplayer(props){
     const enemyscore = React.useRef(0);
     const round = React.useRef(1);
 
+
+    const [refresh, setRefresh] = React.useState(1);
     const [preTimerOn, setPreTimerOn] = React.useState(true);
     const [timerOn, setTimerOn] = React.useState(false);
+    const gameOver =  React.useRef(false);
     const [timer, setTimer] = React.useState({
         minutes: "", 
         seconds: ""
@@ -40,6 +43,7 @@ export default function TableSingleplayer(props){
         lastPicked.current = { line: undefined, cell: undefined };
         tableFull.current = 0;
         setTimerOn(false);
+        setPreTimerOn(true);
         setTableState(tableSetup());
         setTimer({
             minutes: "", 
@@ -47,6 +51,8 @@ export default function TableSingleplayer(props){
         });
         gameStarted.current = false;
         winner.current = undefined;
+        gameOver.current = false;
+        setRefresh((prev) => !prev);
     }
 
     var cell = 
@@ -82,6 +88,7 @@ export default function TableSingleplayer(props){
     tableStateRef.current = tableState;
 
     function handleClick(line, cell) {
+        setTimerOn((prev) => !prev);
         function checkWin(line, cell){
 
             function checkFirstDiag(){
@@ -156,7 +163,6 @@ export default function TableSingleplayer(props){
                 }
                 return(temp);
             }
-            console.log('twice?');
             if(checkFirstDiag() >= props.countToWin) {}
             else if(checkSecondDiag() >= props.countToWin) {}
             else if(checkVertical() >= props.countToWin) {}
@@ -204,6 +210,7 @@ export default function TableSingleplayer(props){
     }
 
     function endGame(){
+        gameOver.current = true;
         round.current = round.current + 1;
         let _tableState = JSON.parse(JSON.stringify(tableStateRef.current));
         for(let i = 0; i < props.tableSize; i++){
@@ -223,8 +230,7 @@ export default function TableSingleplayer(props){
 
         setTableState(_tableState);
         setTimerOn(false);
-
-
+        
         function alertWinner(text) { setTimeout(() => alert(text), 300); }
         if(gameStarted.current && winner.current === 'X'){ alertWinner('X won!'); }
         else if(gameStarted.current && winner.current === 'O'){ alertWinner('O won!') }
@@ -264,8 +270,13 @@ export default function TableSingleplayer(props){
         <div className="game--container">
                 <p>{myscore.current}</p>
                 <p>{enemyscore.current}</p>
-                {(!timerOn && !gameStarted.current) && <Countdown getTime={getTime} minutes={0} seconds={10} running={preTimerOn} hide={false}/>}
-                {(timerOn || (!timerOn && gameStarted.current)) && <Countdown getTime={getTime} minutes={10} seconds={0} running={timerOn} hide={false}/>}
+                {(!timerOn && !gameStarted.current) && <Countdown key={refresh} getTime={getTime} minutes={0} seconds={10} running={preTimerOn} hide={false}/>}
+                {(timerOn || (!timerOn && gameStarted.current)) && 
+                    <>
+                    <Countdown getTime={getTime} minutes={10} seconds={0} running={timerOn} hide={false}/>
+                    <Countdown getTime={getTime} minutes={10} seconds={0} running={gameOver.current ? timerOn : !timerOn} hide={false}/>
+                    </>
+                }
             <div className="table">
                 {table}
             <div className="outside" />

@@ -30,6 +30,21 @@ export default function TableMultiplayer(props){
     const gameStarted = React.useRef(false);
     const winner = React.useRef(undefined);
 
+    function reset(){
+        playerValue.current = playerValue.current === 'X' ? 'O' : 'X';
+        yourTurn.current = true;
+        lastPicked.current = { line: undefined, cell: undefined };
+        tableFull.current = 0;
+        setTimerOn(false);
+        setTableState(tableSetup());
+        setTimer({
+            minutes: "", 
+            seconds: ""
+        });
+        gameStarted.current = false;
+        winner.current = undefined;
+    }
+
     var cell = 
         {
             value: "",

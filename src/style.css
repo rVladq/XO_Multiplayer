@@ -399,16 +399,7 @@ body{
     transition: all 0.3s;
     animation: prevent-hover 0.3s forwards;
 }
-.resetButtonContainer{
-    height: 50px;
-    width: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10em;
-    transition: all 0.3s;
-    animation: prevent-hover 0.3s forwards;
-}
+
 .button{
     border: none;
     height: 9em;
@@ -422,17 +413,19 @@ body{
     align-items: center;
     
 }
+
 .resetButton{
     border: none;
+    margin-top: 28px;
     height: 4em;
     width: 4em;
-    border-radius: 5%;
-    background-color: rgb(221, 117, 20);
-    transition: all 0.3s;
-    animation: pop-in 0.3s;
+    border-radius: 15%;
+    background-color: rgb(240, 178, 137);
+    transition: all 0.2s;
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1;
 }
 
 
@@ -458,6 +451,14 @@ body{
     transform: scale(0.8);
 }
  
+.resetButton:hover{
+    transform: scale(1.2);
+}
+
+.resetButton:active{
+    transform: scale(1.1);
+}
+
 .returnButton{
     background-color: rgb(238, 144, 81);
     border: none;
@@ -596,12 +597,6 @@ body{
 .buttonContainer:hover .button {
     background-color: rgb(221, 100, 20);
     box-shadow: 0 0 30px -9px rgb(221, 100, 20);
-}
-
-.resetButton{
-    width: 2em;
-    height: 2.3em;
-    background-color: rgb(255, 229, 159);
 }
 
 .heroImg{

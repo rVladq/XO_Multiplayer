@@ -12,16 +12,11 @@ const ResetButton= (props) => {
     
     return(
         <div 
-            className="buttonContainer"
+            className="resetButton"
             onMouseOver={ (event) => handleMouseOverHover() } 
             onMouseLeave={ (event) => handleMouseLeaveHover() } 
-            style = { hover ? { transform: 'scale(1.2)' } : {} }
+            onClick={ handleClick }
         >
-            <button
-                onClick={ handleClick }
-                className="button"
-                style={ hover ? { backgroundColor: 'rgb(221, 100, 20)', boxShadow: '0 0 30px -9px rgb(221, 100, 20)', } : props.style }
-            />
         </div>
     )
     
