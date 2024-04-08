@@ -370,13 +370,31 @@ body{
         
 }
 
-.scoreboard--container{
-    width: calc(var(--board-size)*var(--zoom));
+.timer--container{
+    width: 100px;
     color: var(--table-color);
     text-align: center;
     letter-spacing: 2px;
     padding-bottom: 15px;
     z-index: 1;
+}
+
+.game--container > .scoreboard--container {
+    display: flex;
+    width: 96%;
+    justify-content: space-between;
+    flex-direction: row;
+    z-index: 1000;
+    padding: 5px;
+}
+
+.game--container > .scoreboard--container > .scoreboard--score_letter {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    transition: 0.2s all;
+
 }
 
 .menuContainer{

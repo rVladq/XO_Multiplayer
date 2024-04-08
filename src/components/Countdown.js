@@ -32,11 +32,12 @@ export default function(props){
     if(props.hide && time.minutes === 0 && time.seconds === 0) { setTimeout(() => { setDisplayNone("none"); }, 1000) };
 
     const style = {
-        display: displayNone
+        display: displayNone,
+        ...props.style
     }
 
     return(
-        <div className="scoreboard--container" style={style}>
+        <div className="timer--container" style={style}>
             <h1>{time.minutes < 10 && <span>0</span>}{time.minutes}:{time.seconds < 10 && <span>0</span>}{time.seconds}</h1>
         </div>
     )

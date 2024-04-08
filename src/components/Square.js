@@ -42,6 +42,8 @@ let lastPickedStyle = {
 }
 
 const Square = React.memo((props) => {
+console.log("re-render?")
+
     // const [hover, setHover] = React.useState(false);
     const [last, setLast] = React.useState(false);
     
@@ -49,6 +51,12 @@ const Square = React.memo((props) => {
         lastPickedStyle = {
             ...lastPickedStyle,
             opacity: '50%'
+        }
+    }
+    else {
+        lastPickedStyle = {
+            ...lastPickedStyle,
+            opacity: '30%'
         }
     }
 
