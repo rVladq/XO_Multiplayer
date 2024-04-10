@@ -397,6 +397,10 @@ body{
 
 }
 
+.game--container > .scoreboard--container > .scoreboard--score_letter > h2 {
+    
+}
+
 .menuContainer{
     display: flex;
     flex-direction: column;
@@ -446,6 +450,26 @@ body{
     z-index: 1;
 }
 
+.resetButton > svg {
+    padding-top: 3px;
+    height: 60%;
+    align-self: center;
+    opacity: 90%;
+    pointer-events: none;
+}
+
+.rotate{
+    animation: loading 0.9s infinite ease-in-out;  
+}
+
+@keyframes loading {
+    0% { 
+      transform: rotate(0); 
+    }
+    70%, 100% { 
+      transform: rotate(360deg);
+    }
+}
 
 .button > p {
     font-family: Poppins;
@@ -453,6 +477,8 @@ body{
     font-size: 2.3em;
     pointer-events: none;
 }
+
+
 
 .buttonImg{
     pointer-events: none;

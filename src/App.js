@@ -71,7 +71,7 @@ export default function App() {
                 onDisconnectRef.current = database.onDisconnect(database.child(mmRef, `/${size}/${playerRef.current.uid}`)).remove();
                 onGameAddedRef.current = database.onChildAdded(database.child(gamesRef, `/${size}`), (game) => {
                   if(game.key.includes(playerRef.current.uid)){
-                    playerValue.current = game.child(`players/${playerRef.current.uid}`).val();
+                    playerValue.current = game.child(`players/${playerRef.current.uid}/value`).val();
                     tableSize.current = parseInt(game.ref.parent.key);
                     countToWin.current = count;
                     gameId.current = game.key;
@@ -93,7 +93,10 @@ export default function App() {
                     let gameId = '';
                     let playerObj = {};
                     players.forEach((player) => {
-                      playerObj[`${player.key}`] = value;
+                      playerObj[`${player.key}`] = {
+                        value: value,
+                        score: 0,
+                      }
                       value = (value === 'X') ? 'O' : 'X';
                       gameId += player.key;
                       database.remove(database.child(mmRef, `/${size}/${player.key}`));
@@ -121,7 +124,7 @@ export default function App() {
     return(
     <>
         { !gaming && loaded && <Home singleplayer={singleplayer} matchmake={matchmake}/> }
-        { gaming && gameId.current &&  <TableMultiplayer tableSize={tableSize.current} countToWin={countToWin.current} id = {gameId.current} key={gameId.current} playerValue = {playerValue.current}/> }
+        { gaming && gameId.current &&  <TableMultiplayer tableSize={tableSize.current} countToWin={countToWin.current} id = {gameId.current} key={gameId.current} playerValue = {playerValue.current} playerRef = { playerRef } /> }
         { gaming && !gameId.current && <TableSingleplayer tableSize={tableSize.current} countToWin={countToWin.current}/> }
     </>
     )
