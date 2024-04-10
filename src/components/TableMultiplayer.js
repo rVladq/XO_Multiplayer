@@ -15,14 +15,16 @@ export default function TableMultiplayer(props){
     const playerValue = React.useRef(props.playerValue);
     const yourTurn = React.useRef(playerValue.current === 'X' ? true : false);
     const lastPicked = React.useRef( { line: undefined, cell: undefined } );
-    const tableFull = React.useRef(0);
+    const tableFull = React.useRef(-1);
     const myscore = React.useRef(0);
     const enemyscore = React.useRef(0);
     const round = React.useRef(1);
     const playerRef =  React.useRef(props.playerRef.current);
+    const enemyRef =  React.useRef(undefined);
     const clickedRefresh = React.useRef(false);
 
     const [refresh, setRefresh] = React.useState(1);
+    const [refresh_button, setRefreshButton] = React.useState(1);
     const [preTimerOn, setPreTimerOn] = React.useState(props.id ? true : false);
     const [timerOn, setTimerOn] = React.useState(false);
     const gameOver =  React.useRef(false);
@@ -31,12 +33,12 @@ export default function TableMultiplayer(props){
         seconds: ""
     });
     const timerRef = React.useRef({
-        minutes: "", 
-        seconds: ""
+        minutes: 0, 
+        seconds: 5
     });
 
     const gameStarted = React.useRef(false);
-    const winner = React.useRef(undefined);
+    const winner = React.useRef(null);
 
     function request_reset(){
 
@@ -46,10 +48,12 @@ export default function TableMultiplayer(props){
                     if(!clickedRefresh.current) {
                         if(snap.val() === 0) clickedRefresh.current = true;
                         database.set(child(gameRef, '/reset'), snap.val() + 1);
+                        setRefreshButton((prev)=>!prev);
                     }
                     else {
                         database.set(child(gameRef, '/reset'), snap.val() - 1);
                         clickedRefresh.current = false;
+                        setRefreshButton((prev)=>!prev);
                     }
                 }
             })
@@ -96,7 +100,7 @@ export default function TableMultiplayer(props){
         database.set(child(gameRef, '/status'), 'reset')
         database.set(child(gameRef, '/reset'), 0);
         // lastPicked.current = { line: undefined, cell: undefined };
-        tableFull.current = 0;
+        tableFull.current = -1;
         // setTimerOn((prev) => !prev);
         setTableState(tableSetup());
         // tableStateRef.current = tableSetup();
@@ -107,10 +111,11 @@ export default function TableMultiplayer(props){
             seconds: ""
         });
         setRefresh((prev) => !prev);
+
+        database.set(child(gameRef, '/info/winner'), null);
         database.set(database.child(gameRef, '/table'), tableSetup());
 
 
-        // winner.current = undefined;
 
     }
 
@@ -159,6 +164,7 @@ export default function TableMultiplayer(props){
                 if(!snapshot.exists()) { return }
                 let players = snapshot.val();
                 Object.keys(players).forEach((key) => {
+                    if(key !== playerRef.current.uid) { enemyRef.current = key; }
                     if(players[`${key}`]['value'] === 'X'){
                         myscore.current = players[`${key}`]['score'];
                     }
@@ -186,7 +192,7 @@ export default function TableMultiplayer(props){
 
             database.onValue(database.child(gameRef, '/table'), (snapshot) => {
                 console.log('D');
-                
+                tableFull.current = tableFull.current + 1;
                 if(gameStarted.current && timerRef.current.minutes === 0 && timerRef.current.seconds === 0) {
                     let _tableState = JSON.parse(JSON.stringify(snapshot.val())); 
                     setTableState(_tableState);
@@ -202,9 +208,8 @@ export default function TableMultiplayer(props){
                             lastPicked: true,
                         }
                     }
-                    
-                    yourTurn.current = !yourTurn.current;
                     setTimerOn((prev) => !prev);
+                    yourTurn.current = !yourTurn.current;
                     setTableState(_tableState);
                 }
                 else if(!gameStarted.current && timerRef.current.minutes === 0 && timerRef.current.seconds === 0) {
@@ -319,7 +324,7 @@ export default function TableMultiplayer(props){
         }
 
         console.log('herex');
-        console.log(preTimerOn, yourTurn.current, gameOver.current)
+        // console.log(preTimerOn, yourTurn.current, gameOver.current)
         if (!preTimerOn) { return }
         if (!yourTurn.current) { return }
         if(gameOver.current) { return } 
@@ -327,7 +332,7 @@ export default function TableMultiplayer(props){
 
         let _tableState = JSON.parse(JSON.stringify(tableStateRef.current));
         if(_tableState[line][cell].isChecked) { return }
-        tableFull.current = tableFull.current + 1;
+        // tableFull.current = tableFull.current + 1;
         
         _tableState[line][cell] = {
             ..._tableState[line][cell],
@@ -335,9 +340,9 @@ export default function TableMultiplayer(props){
             isChecked: true,
         };
 
-        console.log(_tableState);
-        console.log(gameStarted.current);
-        console.log(lastPicked.current);
+        // console.log(_tableState);
+        // console.log(gameStarted.current);
+        // console.log(lastPicked.current);
 
         if(gameStarted.current){
             _tableState[lastPicked.current.line][lastPicked.current.cell] = {
@@ -354,11 +359,12 @@ export default function TableMultiplayer(props){
         database.set(database.child(gameRef, '/table'), _tableState);
 
         console.log('here3');
-        
+        console.log('tableFull: ', tableFull.current)
         checkWin(line, cell);
     }
 
     function endGame() {
+        console.log('GAMEOVER');
 
         gameOver.current = true;
         let _tableState = JSON.parse(JSON.stringify(tableStateRef.current));
@@ -372,11 +378,18 @@ export default function TableMultiplayer(props){
             }
         }
 
-        if(!gameStarted.current) { database.set(database.child(gameRef, '/table'), _tableState); database.set(child(gameRef, '/info/winner'), `Game aborted!`); return }
-        // else if (gameStarted.current && timerRef.current.minutes === 0 && timerRef.current.seconds === 0) { database.set(database.child(gameRef, '/table'), _tableState); database.set(child(gameRef, '/info/winner'), `Draw!`); return }
+        console.log('BEFORE REACHED: ', gameStarted.current, winner.current);
+        console.log(timerRef.current);
+        if(!gameStarted.current) { database.set(database.child(gameRef, '/table'), _tableState); database.set(child(gameRef, '/status'), `Game aborted!`); return }
+        else if (gameStarted.current && (tableFull.current >= props.tableSize * props.tableSize && winner.current === undefined)) { 
+            database.set(database.child(gameRef, '/table'), _tableState); return; 
+        }
+        else if (gameStarted.current && winner.current === undefined) {
+            database.set(database.child(gameRef, '/table'), _tableState); return; 
+        }
 
         _tableState[lastPicked.current.line][lastPicked.current.cell] = { ..._tableState[lastPicked.current.line][lastPicked.current.cell], value: winner.current, lastPicked: true, gameOver: true }
-
+        console.log('REACHED');
         database.set(database.child(gameRef, '/table'), _tableState);
         // setTimerOn(false);
 
@@ -409,7 +422,12 @@ export default function TableMultiplayer(props){
     }
 
     React.useEffect(() => {
-        if(timer.minutes === 0 && timer.seconds === 0) { timerRef.current = timer; database.set(child(gameRef, '/status'), 'game over'); }
+        timerRef.current = timer;
+        if(timer.minutes === 0 && timer.seconds === 0 && yourTurn.current) { 
+            console.log('TIMEOUT');
+            database.set(child(gameRef, `/players/${enemyRef.current}/score`), playerValue.current === 'X' ? enemyscore.current + 1 : myscore.current + 1);
+            database.set(child(gameRef, '/status'), 'game over');
+        }
     }, [timer]);
 
     const timerStyle=[
@@ -461,7 +479,7 @@ export default function TableMultiplayer(props){
                 <div className="outside" />
             </div>
             
-            <ResetButton key={refresh} onClick={request_reset} pressed={clickedRefresh.current}/>
+            <ResetButton key={refresh_button} onClick={request_reset} pressed={clickedRefresh.current}/>
         
         </div>
 

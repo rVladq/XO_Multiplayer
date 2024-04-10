@@ -239,8 +239,20 @@ export default function TableSingleplayer(props){
         }
 
         if(!gameStarted.current) { setTableState(_tableState); alertWinner('Game aborted!'); return }
-        else if(gameStarted.current && timerRef.current.minutes === 0 && timerRef.current.seconds === 0){ setTableState(_tableState); alertWinner('Draw!'); return;}
-
+        else if(gameStarted.current && 
+            (timerRef.current.minutes === 0 && timerRef.current.seconds === 0)
+            ){ 
+                if(playerValue.current === 'X'){
+                    enemyscore.current = enemyscore.current + 1;
+                }
+                else {
+                    myscore.current = myscore.current + 1;
+                }
+                setTableState(_tableState); return; 
+            }
+        else if (gameStarted.current && (tableFull.current === props.tableSize * props.tableSize && winner.current === undefined)) { setTableState(_tableState); return; } 
+        
+        
         _tableState[lastPicked.current.line][lastPicked.current.cell] = { ..._tableState[lastPicked.current.line][lastPicked.current.cell], lastPicked: true, gameOver: true }
 
         setTableState(_tableState);
@@ -277,6 +289,7 @@ export default function TableSingleplayer(props){
     }
 
     React.useEffect(() => {
+        timerRef.current = timer;
         if(timer.minutes === 0 && timer.seconds === 0) { timerRef.current = timer; endGame(); }
     }, [timer]);
 
@@ -312,7 +325,7 @@ export default function TableSingleplayer(props){
                                 <h1>-</h1>
                                 <h1 className="score">{myscore.current}</h1>
                             </div>
-                            <Countdown key={refresh} getTime={getTime} minutes={10} seconds={0} running={gameOver.current ? false : !timerOn} hide={false}/>
+                            <Countdown key={refresh} getTime={getTime} minutes={0} seconds={30} running={gameOver.current ? false : !timerOn} hide={false}/>
                         </div>
                         <div className = "scoreboard--score_letter" style = {timerStyle[selectedStyle2]}>
                             <div className ="scoreboard--score_letter_container">
@@ -322,7 +335,7 @@ export default function TableSingleplayer(props){
                                     <circle cx="102.34" cy="102.34" r="79.84" stroke="orange" stroke-width="45"/>
                                 </svg>
                             </div>
-                            <Countdown key={refresh} getTime={getTime} minutes={10} seconds={0} running={gameOver.current ? false : timerOn} hide={false}/>
+                            <Countdown key={refresh} getTime={getTime} minutes={0} seconds={30} running={gameOver.current ? false : timerOn} hide={false}/>
                         </div>
                     </div>
                 }
