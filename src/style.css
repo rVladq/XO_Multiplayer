@@ -391,15 +391,31 @@ body{
 .game--container > .scoreboard--container > .scoreboard--score_letter {
     display: flex;
     align-items: center;
-    flex-direction: column;
     justify-content: center;
+    flex-direction: column;
     transition: 0.2s all;
 
 }
 
-.game--container > .scoreboard--container > .scoreboard--score_letter > h2 {
-    
+.game--container > .scoreboard--container > .scoreboard--score_letter > .scoreboard--score_letter_container > .score {
+    /* background-color: red; */
+    font-size: 2.5em;
 }
+
+.game--container > .scoreboard--container > .scoreboard--score_letter > .scoreboard--score_letter_container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    z-index:9999;
+}
+
+/* .game--container > .scoreboard--container > .scoreboard--score_letter > .scoreboard--score_letter_container > svg {
+    opacity: 100%;
+} */
+
+
 
 .menuContainer{
     display: flex;
