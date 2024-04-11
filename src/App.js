@@ -27,6 +27,7 @@ export default function App() {
   const tableSize = React.useRef(0);
   const playerValue = React.useRef('X');
   const gameId = React.useRef();
+  const AI = React.useRef(false);
   const [gaming, setGaming] = React.useState(false);
 
   const onDisconnectRef = React.useRef();
@@ -117,15 +118,23 @@ export default function App() {
     playerValue.current = 'X';
     setGaming(true);
   }
-
+  function Ai( { size, count } ){
+    tableSize.current = size;
+    countToWin.current = count;
+    playerValue.current = 'X';
+    AI.current = true;
+    setGaming(true);
+  }
+  
     var root = document.querySelector(':root');
     root.style.setProperty('--board-size', tableSize.current);
 
     return(
     <>
         { !gaming && loaded && <Home singleplayer={singleplayer} matchmake={matchmake}/> }
-        { gaming && gameId.current &&  <TableMultiplayer tableSize={tableSize.current} countToWin={countToWin.current} id = {gameId.current} key={gameId.current} playerValue = {playerValue.current} playerRef = { playerRef } /> }
-        { gaming && !gameId.current && <TableSingleplayer tableSize={tableSize.current} countToWin={countToWin.current}/> }
+        { gaming && gameId.current && <TableMultiplayer tableSize={tableSize.current} countToWin={countToWin.current} id = {gameId.current} key={gameId.current} playerValue = {playerValue.current} playerRef = { playerRef } /> }
+        { gaming && !gameId.current && !AI.current && <TableSingleplayer tableSize={tableSize.current} countToWin={countToWin.current}/> }
+        {/* { gaming && !gameId.current && AI.current && <TableAI tableSize={tableSize.current} countToWin={countToWin.current}/> } */}
     </>
     )
 
