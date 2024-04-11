@@ -100,7 +100,7 @@ export default function TableMultiplayer(props){
         database.set(child(gameRef, '/status'), 'reset')
         database.set(child(gameRef, '/reset'), 0);
         // lastPicked.current = { line: undefined, cell: undefined };
-        tableFull.current = -1;
+        tableFull.current = 0;
         // setTimerOn((prev) => !prev);
         setTableState(tableSetup());
         // tableStateRef.current = tableSetup();
@@ -186,7 +186,8 @@ export default function TableMultiplayer(props){
             })
 
             database.onValue(database.child(gameRef, '/info/winner'), (snapshot) => {
-                if(!snapshot.exists()) { return }
+                winner.current = null;
+                if(!snapshot.exists()) {  return; }
                 winner.current = snapshot.val();
             })
 
@@ -208,7 +209,11 @@ export default function TableMultiplayer(props){
                             lastPicked: true,
                         }
                     }
-                    setTimerOn((prev) => !prev);
+                    console.log('...here', winner.current);
+                    if(winner.current === null){
+                        console.log('here?')
+                        setTimerOn((prev) => !prev);
+                    }
                     yourTurn.current = !yourTurn.current;
                     setTableState(_tableState);
                 }
@@ -315,12 +320,13 @@ export default function TableMultiplayer(props){
             else if(checkSecondDiag() >= props.countToWin) {}
             else if(checkVertical() >= props.countToWin) {}
             else if(checkHorizontal() >= props.countToWin) {}
-            else if(tableFull.current === props.tableSize*props.tableSize) { database.set(child(gameRef, '/status'), 'game over'); return }
+            else if(tableFull.current === props.tableSize*props.tableSize) { database.set(child(gameRef, '/status'), 'game over'); return true;}
             else { return }
     
             database.set(child(gameRef, '/info/winner'), playerValue.current);
             database.set(child(gameRef, `/players/${playerRef.current.uid}/score`), playerValue.current === 'X' ? myscore.current + 1 : enemyscore.current + 1);
             database.set(child(gameRef, '/status'), 'game over');
+            return true;
         }
 
         console.log('herex');
@@ -356,11 +362,13 @@ export default function TableMultiplayer(props){
         if (!gameStarted.current) { 
             database.set(child(gameRef, '/status'), 'in progress'); 
         }
-        database.set(database.child(gameRef, '/table'), _tableState);
+        if(!checkWin(line, cell)){
+
+            database.set(database.child(gameRef, '/table'), _tableState);
+        }
 
         console.log('here3');
         console.log('tableFull: ', tableFull.current)
-        checkWin(line, cell);
     }
 
     function endGame() {
@@ -381,16 +389,19 @@ export default function TableMultiplayer(props){
         console.log('BEFORE REACHED: ', gameStarted.current, winner.current);
         console.log(timerRef.current);
         if(!gameStarted.current) { database.set(database.child(gameRef, '/table'), _tableState); database.set(child(gameRef, '/status'), `Game aborted!`); return }
-        else if (gameStarted.current && (tableFull.current >= props.tableSize * props.tableSize && winner.current === undefined)) { 
-            database.set(database.child(gameRef, '/table'), _tableState); return; 
+        else if (gameStarted.current && (tableFull.current >= props.tableSize * props.tableSize && winner.current === null)) { 
+            // database.set(database.child(gameRef, '/table'), _tableState); return;
+            setTableState(_tableState);
         }
-        else if (gameStarted.current && winner.current === undefined) {
-            database.set(database.child(gameRef, '/table'), _tableState); return; 
+        else if (gameStarted.current && winner.current === null) {
+            // database.set(database.child(gameRef, '/table'), _tableState); return; 
+            // setTableState(_tableState); return;
         }
 
         _tableState[lastPicked.current.line][lastPicked.current.cell] = { ..._tableState[lastPicked.current.line][lastPicked.current.cell], value: winner.current, lastPicked: true, gameOver: true }
         console.log('REACHED');
-        database.set(database.child(gameRef, '/table'), _tableState);
+        // database.set(database.child(gameRef, '/table'), _tableState);
+        setTableState(_tableState);
         // setTimerOn(false);
 
         // if(gameStarted.current && winner.current === 'X'){ database.set(child(gameRef, '/info/winner'), 'X') }
