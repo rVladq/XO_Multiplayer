@@ -17,10 +17,34 @@ export default function Home(props){
             subButtons: [
                 {
                     info: 'Against PC',
-                    img: imgplaceholderFill,
+                    img: imgplaceholderBlank,
+                    subButtons: [
+                        {
+                            info: '3X3',
+                            subInfo: '(3 in a row)',
+                            img: img3x3,
+                            img2: imgSingleplayer,
+                            animation: 'pulse',
+                            onClick: props.AI,
+                            onClickProps: { size: 3, count: 3 },
+                        },
+                        {
+                            info: '9X9',
+                            subInfo: '(5 in a row)',
+                            img: img7x7,
+                            img2: imgSingleplayer,
+                            animation: 'pulse',
+                            onClick: props.AI,
+                            onClickProps: { size: 9, count: 5 },
+                        },
+                        {
+                            info: 'CUSTOM',
+                            img: imgplaceholderFill,
+                        },
+                    ],
                 },
                 {
-                    info: 'Alone!...',
+                    info: 'CO-OP',
                     img: imgplaceholderBlank,
                     subButtons: [
                         {
@@ -82,28 +106,28 @@ export default function Home(props){
         },
         {
             info: '(❛ ᴗ❛)',
-            img: imgplaceholderBlank,
+            img: imgplaceholderFill,
             style: {
                 // backgroundColor: 'purple'
             },
-            subButtons: [
-                {
-                    message: 'CIRCLING',
-                    info: "(︡❛ ᴗ❛ ͜)",
-                },
-                {
-                    message: 'SKY',
-                    info: '( ͡❛ ͜ʖ ͡❛)',
-                    subButtons: [
-                        {message: 'Oh, wow!' },
-                        {
-                            info: '^.^', 
-                            message: '	⊂(◉‿◉)つ', 
-                        },
-                        {message: 'You found Meh!'},
-                    ]
-                },
-            ],
+            // subButtons: [
+            //     {
+            //         message: 'CIRCLING',
+            //         info: "(︡❛ ᴗ❛ ͜)",
+            //     },
+            //     {
+            //         message: 'SKY',
+            //         info: '( ͡❛ ͜ʖ ͡❛)',
+            //         subButtons: [
+            //             {message: 'Oh, wow!' },
+            //             {
+            //                 info: '^.^', 
+            //                 message: '	⊂(◉‿◉)つ', 
+            //             },
+            //             {message: 'You found Meh!'},
+            //         ]
+            //     },
+            // ],
         }
     ]);
 

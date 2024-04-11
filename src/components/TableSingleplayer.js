@@ -178,7 +178,7 @@ export default function TableSingleplayer(props){
             else if(checkHorizontal() >= props.countToWin) {}
             else if(tableFull.current === (props.tableSize * props.tableSize)) { endGame(); return }
             else { return }
-            console.log(round.current, round.current%2.0 != 0)
+            // console.log(round.current, round.current%2.0 != 0)
             if(playerValue.current === 'X'){
                 myscore.current = myscore.current + 1;
             } else {

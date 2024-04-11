@@ -13,6 +13,7 @@ export default function TableSingleplayer(props){
     const playerValue = React.useRef('X');
     const yourTurn = React.useRef(true);
     const lastPicked = React.useRef( { line: undefined, cell: undefined } );
+    const preLastPicked = React.useRef( { line: undefined, cell: undefined } );
     const tableFull = React.useRef(0);
     const myscore = React.useRef(0);
     const enemyscore = React.useRef(0);
@@ -35,18 +36,12 @@ export default function TableSingleplayer(props){
     const winner = React.useRef(undefined);
 
     function reset(){
-        if(round.current % 2 === 0){
-            if (playerValue.current === 'O'){
-                setTimerOn((prev)=>!prev);
-            }
+
+        if (playerValue.current === 'O'){
+            setTimerOn((prev)=>!prev);
             playerValue.current = 'X';
         }
-        else {
-            if(playerValue.current === 'X'){
-                setTimerOn((prev)=>!prev);
-            }
-            playerValue.current = 'O';
-        }
+
         round.current = round.current + 1;
         // if(!gameOver.current) {playerValue.current = playerValue.current === 'X' ? 'O' : 'X'; }
         yourTurn.current = true;
@@ -61,6 +56,7 @@ export default function TableSingleplayer(props){
         gameStarted.current = false;
         winner.current = undefined;
         gameOver.current = false;
+        
         setRefresh((prev) => !prev);
     }
 
@@ -96,6 +92,48 @@ export default function TableSingleplayer(props){
     }
 
     tableStateRef.current = tableState;
+
+    function getRandomSquare(tableState, totalGridSize, line, cell, around){
+        // console.log('random square');
+        function checkValidity(line, cell) {
+            console.log('check validity for:', line, cell)
+            if((line < 0 || line > totalGridSize - 1) || (cell < 0 || cell > totalGridSize - 1)) { return false; }
+            if(tableState[line][cell].isChecked){
+                return false;
+            }
+            // console.log('validated');
+            return true;
+        }
+
+        let _line = line - around;
+        let _cell = cell - around;
+
+        let possiblities = [];
+
+        for(let i = _line; i < 2+around; i++) {
+            for(let j = _cell; j < 2+around; j++){
+                if(checkValidity(i, j)){
+                    possiblities.push([i, j]);
+                    // console.log('added');
+                }
+            }
+        }
+        if(possiblities.length === 0){
+            getRandomSquare(tableState, totalGridSize, line, cell, around+1)
+        }
+        else {
+            function getRandomInt(max) {
+                return Math.floor(Math.random() * max);
+            }
+            // console.log("possiblities:", possiblities, possiblities.length);
+
+            let place = possiblities[getRandomInt(possiblities.length)];
+            // console.log("PLACE:", place);
+
+            yourTurn.current = !yourTurn.current;
+            handleClick(place[0], place[1]);
+        }
+    }
 
     function handleClick(line, cell) {
         function checkWin(line, cell){
@@ -178,7 +216,7 @@ export default function TableSingleplayer(props){
             else if(checkHorizontal() >= props.countToWin) {}
             else if(tableFull.current === (props.tableSize * props.tableSize)) { endGame(); return }
             else { return }
-            console.log(round.current, round.current%2.0 != 0)
+            // console.log(round.current, round.current%2.0 != 0)
             if(playerValue.current === 'X'){
                 myscore.current = myscore.current + 1;
             } else {
@@ -209,11 +247,12 @@ export default function TableSingleplayer(props){
                 lastPicked: false,
             }
         }
-
+        preLastPicked.current = { line: lastPicked.current.line, cell: lastPicked.current.cell };
         lastPicked.current = { line: line, cell: cell };
         tableStateRef.current = _tableState;
         setTableState(_tableState);
         checkWin(line, cell);
+
         if(!gameOver.current) {playerValue.current = playerValue.current === 'X' ? 'O' : 'X';}
         
         if (!gameStarted.current) { gameStarted.current = true; setTimerOn((prev) => !prev); }
@@ -221,6 +260,11 @@ export default function TableSingleplayer(props){
             setTimerOn((prev) => !prev);
         }
         
+        if(playerValue.current === 'O'){
+            yourTurn.current = !yourTurn.current;
+
+            setTimeout(() => getRandomSquare(_tableState, props.tableSize, line, cell, 1), 1000);
+        }
 
     }
 

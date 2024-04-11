@@ -3,6 +3,7 @@ import React from "react"
 import Home from "./components/Home"
 import TableSingleplayer from "./components/TableSingleplayer"
 import TableMultiplayer from "./components/TableMultiplayer"
+import TableAI from "./components/TableAI"
 
 import { initializeApp } from "firebase/app";
 import * as fbauth  from "firebase/auth";
@@ -131,10 +132,10 @@ export default function App() {
 
     return(
     <>
-        { !gaming && loaded && <Home singleplayer={singleplayer} matchmake={matchmake}/> }
+        { !gaming && loaded && <Home singleplayer={singleplayer} AI={Ai} matchmake={matchmake}/> }
         { gaming && gameId.current && <TableMultiplayer tableSize={tableSize.current} countToWin={countToWin.current} id = {gameId.current} key={gameId.current} playerValue = {playerValue.current} playerRef = { playerRef } /> }
         { gaming && !gameId.current && !AI.current && <TableSingleplayer tableSize={tableSize.current} countToWin={countToWin.current}/> }
-        {/* { gaming && !gameId.current && AI.current && <TableAI tableSize={tableSize.current} countToWin={countToWin.current}/> } */}
+        { gaming && !gameId.current && AI.current && <TableAI tableSize={tableSize.current} countToWin={countToWin.current}/> }
     </>
     )
 
