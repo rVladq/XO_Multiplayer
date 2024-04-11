@@ -263,7 +263,7 @@ export default function TableSingleplayer(props){
         if(playerValue.current === 'O'){
             yourTurn.current = !yourTurn.current;
 
-            setTimeout(() => getRandomSquare(_tableState, props.tableSize, line, cell, 1), 1000);
+            setTimeout(() => getRandomSquare(_tableState, props.tableSize, line, cell, 1), 350);
         }
 
     }
@@ -369,7 +369,7 @@ export default function TableSingleplayer(props){
                                 <h1>-</h1>
                                 <h1 className="score">{myscore.current}</h1>
                             </div>
-                            <Countdown key={refresh} getTime={getTime} minutes={0} seconds={30} running={gameOver.current ? false : !timerOn} hide={false}/>
+                            <Countdown key={refresh} getTime={getTime} minutes={0} seconds={props.tableSize === 3 ? 10 : 30} running={gameOver.current ? false : !timerOn} hide={false}/>
                         </div>
                         <div className = "scoreboard--score_letter" style = {timerStyle[selectedStyle2]}>
                             <div className ="scoreboard--score_letter_container">
@@ -379,7 +379,7 @@ export default function TableSingleplayer(props){
                                     <circle cx="102.34" cy="102.34" r="79.84" stroke="orange" stroke-width="45"/>
                                 </svg>
                             </div>
-                            <Countdown key={refresh} getTime={getTime} minutes={0} seconds={30} running={gameOver.current ? false : timerOn} hide={false}/>
+                            <Countdown key={refresh} getTime={getTime} minutes={0} seconds={props.tableSize === 3 ? 10 : 30} running={gameOver.current ? false : timerOn} hide={false}/>
                         </div>
                     </div>
                 }
