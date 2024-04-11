@@ -392,10 +392,11 @@ export default function TableMultiplayer(props){
         else if (gameStarted.current && (tableFull.current >= props.tableSize * props.tableSize && winner.current === null)) { 
             // database.set(database.child(gameRef, '/table'), _tableState); return;
             setTableState(_tableState);
+            //return; 
         }
         else if (gameStarted.current && winner.current === null) {
             // database.set(database.child(gameRef, '/table'), _tableState); return; 
-            // setTableState(_tableState); return;
+            setTableState(_tableState); return;
         }
 
         _tableState[lastPicked.current.line][lastPicked.current.cell] = { ..._tableState[lastPicked.current.line][lastPicked.current.cell], value: winner.current, lastPicked: true, gameOver: true }
@@ -470,7 +471,7 @@ export default function TableMultiplayer(props){
                                 <h1>-</h1>
                                 <h1 className="score">{myscore.current}</h1>
                             </div>
-                            <Countdown key={refresh} getTime={getTime} minutes={10} seconds={0} running={gameOver.current ? false : !timerOn} hide={false}/>
+                            <Countdown key={refresh} getTime={getTime} minutes={0} seconds={5} running={gameOver.current ? false : !timerOn} hide={false}/>
                         </div>
                         <div className = "scoreboard--score_letter" style = {timerStyle[selectedStyle2]}>
                         <div className ="scoreboard--score_letter_container">
@@ -480,7 +481,7 @@ export default function TableMultiplayer(props){
                                     <circle cx="102.34" cy="102.34" r="79.84" stroke="orange" stroke-width="45"/>
                                 </svg>
                             </div>
-                            <Countdown key={refresh} getTime={getTime} minutes={10} seconds={0} running={gameOver.current ? false : timerOn} hide={false}/>
+                            <Countdown key={refresh} getTime={getTime} minutes={0} seconds={5} running={gameOver.current ? false : timerOn} hide={false}/>
                         </div>
                     </div>
                 }
